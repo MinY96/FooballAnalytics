@@ -23,10 +23,8 @@ class Postgres():
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             # cursor 객체 생성
             cur = conn.cursor()
-            return True
         except Exception as err:
             print(f"DB 접속 에러 : {err}")
-            return False
             
     def connectDB(self, db_name):
         """
@@ -40,10 +38,8 @@ class Postgres():
             conn = psycopg2.connect(host=self.host, user=self.user, port=self.port, password=self.pw, database=db_name)
             # cursor 객체 생성
             cur = conn.cursor()
-            return True
         except Exception as err:
             print(f"DB 접속 에러 : {err}")
-            return False
     
     def disconnect(self):
         """
@@ -67,11 +63,15 @@ class Postgres():
         """
         
         global conn, cur
-        if (self.connect()):
+        try:
+            self.connect()
             query = f"CREATE DATABASE {db_name}"
             cur.execute(query)
             conn.commit()      
-            self.disconnect()      
+        except Exception as err:
+            print(err)
+        finally:
+            self.disconnect()
         
 
 
