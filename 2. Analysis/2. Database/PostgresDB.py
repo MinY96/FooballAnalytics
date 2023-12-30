@@ -25,7 +25,7 @@ class Postgres():
             cur = conn.cursor()
             return True
         except Exception as err:
-            print(str(err))
+            print(f"DB 접속 에러 : {err}")
             return False
             
     def connectDB(self, db_name):
@@ -42,7 +42,7 @@ class Postgres():
             cur = conn.cursor()
             return True
         except Exception as err:
-            print(str(err))
+            print(f"DB 접속 에러 : {err}")
             return False
     
     def disconnect(self):
@@ -76,5 +76,5 @@ class Postgres():
 
 
 # db = Postgres('localhost', 'postgres', 5432, 'udmt')
-db = Postgres('localhost', 'postgres', 5432, 'uddddmt')
+db = Postgres('localhost', 'postgres', 5432, 'alsdud12')
 db.createDB('football')
