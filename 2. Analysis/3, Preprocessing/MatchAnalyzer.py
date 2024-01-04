@@ -3,7 +3,8 @@ from datetime import datetime
 from itertools import accumulate
 
 def home_team_stat(home_rst):
-    """선택한 팀의 홈 성적 추출
+    """
+    선택한 팀의 홈 성적 추출
 
     Args:
         home_rst (DataFrame): 홈 경기 매치 결과
@@ -20,7 +21,8 @@ def home_team_stat(home_rst):
     return w,d,l,gf,ga,y,r
 
 def away_team_stat(away_rst):
-    """선택한 팀의 원정 성적 추출
+    """
+    선택한 팀의 원정 성적 추출
 
     Args:
         away_rst (DataTable): 원정 결기 매치 결과
@@ -36,8 +38,9 @@ def away_team_stat(away_rst):
     r = int(away_rst['AR'].sum())
     return w,d,l,gf,ga,y,r
 
-def season_table(league, season, match_data):
-    """선택한 시즌의 테이블
+def season_position(league, season, match_data):
+    """
+    선택한 시즌의 테이블
 
     Args:
         league (str): 리그 정보
@@ -75,8 +78,23 @@ def season_table(league, season, match_data):
     table['season'] = season
     return table[['league', 'season', 'position','team', 'point', 'won', 'drawn', 'lost', 'gd', 'gf', 'ga', 'yellow', 'red']]
 
+def season(dt_season_position):
+    """
+    선택한 시즌의 팀 정보
+
+    Args:
+        dt_season_position (DataFrame): tbl_season_position
+    """
+    dt_season = dt_season_position[['league', 'season', 'team']].copy()
+    dt_season['manager'] = None
+    dt_season['captain'] = None
+    dt_season.sort_values('team', inplace=True)
+    return dt_season
+    
+
 def season_match_info(league, season, match_data):
-    """선택한 시즌의 경기 결과
+    """
+    선택한 시즌의 경기 결과
 
     Args:
         league (str): 리그 정보
