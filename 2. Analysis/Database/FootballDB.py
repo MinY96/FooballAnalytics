@@ -1,9 +1,9 @@
-from PostgresDB import Postgres
+from .PostgresDB import Postgres
 
 dic_table = {
     'tbl_league':[('nation','varchar(50)'),
                 ('league','varchar(50)')],
-    'tbl_team':[('team','varchar(50)'),
+    'tbl_team':[('team','varchar(50) UNIQUE NOT NULL'),
                 ('founded','varchar(50)'),
                 ('stadium','varchar(50)'),
                 ('seat','varchar(50)')],
@@ -28,11 +28,13 @@ dic_table = {
     'tbl_season_match':[('league','varchar(50)'),
                 ('season','varchar(50)'),
                 ('team','varchar(50)'),
+                ('round','varchar(50)'),
+                ('date','varchar(50)'),
                 ('referee','varchar(50)'),
                 ('opp','varchar(50)'),
                 ('h_a','varchar(50)'),
                 ('last5','varchar(50)'),
-                ('result','integer'),
+                ('result','varchar(50)'),
                 ('point','integer'),
                 ('gd','integer'),
                 ('gf','integer'),
@@ -42,7 +44,7 @@ dic_table = {
                 ('shgf','integer'),
                 ('shga','integer'),
                 ('shot','integer'),
-                ('sho_on_target','integer'),
+                ('shot_on_target','integer'),
                 ('corner','integer'),
                 ('foul','integer'),
                 ('yellow','integer'),
@@ -108,11 +110,22 @@ class FootballDB:
         """
         self.db.dropTable(self.db_nm, tbl_nm)
                 
-    def insertTable(self, tbl_nm, data):
+    def insertTable(self, tbl_nm, data, on_colflict=False, conflict_col=None):
         """
         Table에 데이터 Insert
 
         Args:
             tbl_nm (str): 테이블 명
             data (DataFrame): 삽입할 데이터
+            on_conflict (bool): 중복 방지 사용 여부
+            conflict_col (str): 중복 여부 체크할 컬럼
         """
+        cols = data.columns
+
+        query1 = f"INSERT INTO {tbl_nm} ({','.join(col for col in cols)}) VALUES "
+        query2 = f"{','.join([str(data) for data in data.itertuples(index=False, name=None)])}" if len(cols)>1 else f"{','.join([str(data).replace(',','') for data in data.itertuples(index=False, name=None)])}"
+        if on_colflict:
+            query2 += f" ON CONFLICT ({conflict_col}) DO NOTHING"
+        query = query1 + query2
+        query = query.replace('None', 'null')
+        self.db.executeDB(self.db_nm, query)

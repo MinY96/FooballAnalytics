@@ -131,7 +131,10 @@ def season_match_info(league, season, match_data):
         rst['league'] = league
         rst['season'] = season
         rst['team'] = team
-        rst['date'] = rst['date'].apply(lambda x: datetime.strptime(x, '%d/%m/%y'))
+        try:
+            rst['date'] = rst['date'].apply(lambda x: datetime.strptime(x, '%d/%m/%y'))
+        except:
+            rst['date'] = rst['date'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y'))
         rst.sort_values('date', inplace=True)
         rst['acc_point'] = list(accumulate(rst['point']))
         rst['acc_gd'] = list(accumulate(rst['gd']))
