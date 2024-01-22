@@ -214,13 +214,15 @@ class Postgres():
         
         global conn, cur
         rows = None
+        cols = None
         try:
             self.connectDB(db_nm)
             cur.execute(query)
+            cols = [desc[0] for desc in cur.description]
             rows = cur.fetchall()
         except Exception as err:
             print(err)
             rows = None
         finally:
             self.disconnect()
-            return rows
+            return rows, cols

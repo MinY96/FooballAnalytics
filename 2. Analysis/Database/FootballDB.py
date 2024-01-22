@@ -129,3 +129,13 @@ class FootballDB:
         query = query1 + query2
         query = query.replace('None', 'null')
         self.db.executeDB(self.db_nm, query)
+        
+    def selectResult(self, query):
+        """
+        select 테스트
+
+        Args:
+            query (_type_): _description_
+        """
+        rows, cols = self.db.selectDB(self.db_nm, query)
+        return rows, cols
